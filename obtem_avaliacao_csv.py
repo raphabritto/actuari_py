@@ -1,32 +1,18 @@
 
-# coding: utf-8
 
-# In[1]:
 
 import random
 
-
-# In[70]:
-
 qtd_try = 0
-
-
-# In[72]:
 
 apostas = []
 
-
-# In[73]:
-
-#while (qtd_try < 100):
 for i in range(10):
     facil = random.sample(range(1, 26), 15)
     facil.sort()
     qtd_match = set(a).intersection(set(b))
     apostas.append(facil)
 
-
-# In[74]:
 
 apostas
 
