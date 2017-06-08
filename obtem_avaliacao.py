@@ -99,3 +99,18 @@ df_prem_plano2 = df_prem_plano1.rename(columns= nomes_colunas).drop(['ID_PREMISS
 df_prem_plano2['percentual_srb'] = df_prem_plano2.percentual_srb.map(tools.calcPercent)
 #print(df_prem_plano2)
 
+nomes_colunas = {'DT_ORIGEM_BNH': 'data_bnh', 'DT_LEI_9876_1999': 'data_lei_9876', 'DT_MEDIA_80_MAIORES_SALARIOS': 'data_media_maiores_salarios', 'TETO_CONTRIBUICAO_INSS': 'teto_contribuicao_inss',
+                 'TETO_BENEFICIO_INSS': 'teto_beneficio_inss', 'SALARIO_MINIMO': 'salario_minimo', 'COTA_FAMILIAR_PENSAO': 'cota_pensao_familiar',
+                 'PROB_APOSENTADO_CASADO_MAS': 'prob_aposentado_casado_mas', 'PROB_APOSENTADO_CASADO_FEM': 'prob_aposentado_casado_fem', 'DIF_IDADE_CONJUGE_MAS': 'dif_idade_conjuge_mas',
+                 'DIF_IDADE_CONJUGE_FEM': 'dif_idade_conjuge_fem', 'LX_INICIAL': 'lx_inicial'}
+
+df_prem_global2 = df_prem_global1.rename(columns= nomes_colunas).drop(['ID_PREMISSA_GLOBAL'], axis=1)
+df_prem_global2.cota_pensao_familiar = df_prem_global2.cota_pensao_familiar.map(tools.calcPercent)
+df_prem_global2.prob_aposentado_casado_mas = df_prem_global2.prob_aposentado_casado_mas.map(tools.calcPercent)
+df_prem_global2.prob_aposentado_casado_fem = df_prem_global2.prob_aposentado_casado_fem.map(tools.calcPercent)
+#print(df_prem_global2)
+
+nomes_colunas = {'COTDATA': 'data_indice', 'COTVALOR': 'indice'}
+df_indice2 = df_indice1.rename(columns= nomes_colunas)
+#df_indice2.indice = df_indice2.indice.map(tools.calcPercent)
+#print(df_indice2)
