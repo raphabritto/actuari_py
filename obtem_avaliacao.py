@@ -73,21 +73,18 @@ df_aval2['fator_capacidade_inss'] = df_aval2.fator_capacidade_inss.map(tools.cal
 df_aval2['fator_capacidade_beneficio'] = df_aval2.fator_capacidade_beneficio.map(tools.calcIndice)
 df_aval2['opcao_bua'] = df_aval2.opcao_bua.map(tools.calcPercent)
 df_aval2['saque_bua'] = df_aval2.saque_bua.map(tools.calcPercent)
-
 #print(df_aval2)
 
-nomes_colunas = {'NR_TEMPO_TAXA_JUROS': 't', 'VL_TAXA_JUROS': 'taxa_juros'}
 
+nomes_colunas = {'NR_TEMPO_TAXA_JUROS': 't', 'VL_TAXA_JUROS': 'taxa_juros'}
 df_taxa_juros2 = df_taxa_juros1.rename(columns= nomes_colunas)
 df_taxa_juros2['taxa_juros'] = df_taxa_juros2.taxa_juros.map(tools.calcPercent)
-
 #print(df_taxa_juros2)
 
-nomes_colunas = {'NR_TEMPO_TAXA_RISCO': 't', 'ID_RESPONSABILIDADE': 'responsabilidade', 'VL_TAXA_RISCO': 'taxa_risco'}
 
+nomes_colunas = {'NR_TEMPO_TAXA_RISCO': 't', 'ID_RESPONSABILIDADE': 'responsabilidade', 'VL_TAXA_RISCO': 'taxa_risco'}
 df_taxa_risco2 = df_taxa_risco1.rename(columns= nomes_colunas)
 df_taxa_risco2['taxa_risco'] = df_taxa_risco2.taxa_risco.map(tools.calcPercent)
-
 #print(df_taxa_risco2)
 
 
@@ -95,22 +92,50 @@ nomes_colunas = {'ID_PLANO_BENEFICIO': 'plano_beneficio', 'IDADE_INICIO_CONTRIB_
                  'IDADE_APOSENT_FUNDACAO_MAS': 'idade_aposent_fundacao_mas', 'IDADE_APOSENT_FUNDACAO_FEM': 'idade_aposent_fundacao_fem', 'TEMPO_CONTRIB_INSS_MAS': 'tempo_contrib_inss_mas',
                  'TEMPO_CONTRIB_INSS_FEM': 'tempo_contrib_inss_fem', 'MAIORIDADE_PLANO': 'maioridade_plano', 'PERCENTUAL_SRB': 'percentual_srb', 'TEMPO_CARENCIA_APOSENTADORIA': 'carencia_aposentadoria'}
 df_prem_plano2 = df_prem_plano1.rename(columns= nomes_colunas).drop(['ID_PREMISSA_PLANO'], axis=1)[df_prem_plano1.ID_PLANO_BENEFICIO == int(df_aval2.plano_beneficio)]
-
 df_prem_plano2['percentual_srb'] = df_prem_plano2.percentual_srb.map(tools.calcPercent)
 #print(df_prem_plano2)
+
 
 nomes_colunas = {'DT_ORIGEM_BNH': 'data_bnh', 'DT_LEI_9876_1999': 'data_lei_9876', 'DT_MEDIA_80_MAIORES_SALARIOS': 'data_media_maiores_salarios', 'TETO_CONTRIBUICAO_INSS': 'teto_contribuicao_inss',
                  'TETO_BENEFICIO_INSS': 'teto_beneficio_inss', 'SALARIO_MINIMO': 'salario_minimo', 'COTA_FAMILIAR_PENSAO': 'cota_pensao_familiar',
                  'PROB_APOSENTADO_CASADO_MAS': 'prob_aposentado_casado_mas', 'PROB_APOSENTADO_CASADO_FEM': 'prob_aposentado_casado_fem', 'DIF_IDADE_CONJUGE_MAS': 'dif_idade_conjuge_mas',
                  'DIF_IDADE_CONJUGE_FEM': 'dif_idade_conjuge_fem', 'LX_INICIAL': 'lx_inicial'}
-
 df_prem_global2 = df_prem_global1.rename(columns= nomes_colunas).drop(['ID_PREMISSA_GLOBAL'], axis=1)
 df_prem_global2.cota_pensao_familiar = df_prem_global2.cota_pensao_familiar.map(tools.calcPercent)
 df_prem_global2.prob_aposentado_casado_mas = df_prem_global2.prob_aposentado_casado_mas.map(tools.calcPercent)
 df_prem_global2.prob_aposentado_casado_fem = df_prem_global2.prob_aposentado_casado_fem.map(tools.calcPercent)
+df_prem_global2['avaliacao'] = df_aval2.avaliacao
 #print(df_prem_global2)
+
 
 nomes_colunas = {'COTDATA': 'data_indice', 'COTVALOR': 'indice'}
 df_indice2 = df_indice1.rename(columns= nomes_colunas)
-#df_indice2.indice = df_indice2.indice.map(tools.calcPercent)
+df_indice2.indice = df_indice2.indice.map(tools.calcIndice)
 #print(df_indice2)
+
+
+nomes_colunas = {'ID_REFERENCIA_IDX_MON': 'id_indexador', 'PC_REAJUSTE': 'pc_indexador'}
+df_indexador2 = df_indexador1.rename(columns=nomes_colunas).drop(['DS_REFERENCIA_IDX_MON'], axis=1)
+#print(df_indexador2.dtypes)
+#print(df_indexador2)
+
+
+nomes_colunas = {'CD_TIPO_REAJUSTE_SALARIAL': 'id_reajuste', 'ID_PATROCINADORA': 'patrocinadora', 'PC_REAJUSTE': 'pc_reajuste'}
+df_reaj_salarial2 = df_reaj_salarial1.rename(columns= nomes_colunas).drop(['DS_TIPO_REAJUSTE_SALARIAL'], axis= 1)
+df_reaj_salarial2.pc_reajuste = df_reaj_salarial2.pc_reajuste.map(tools.calcPercent)
+#print(df_reaj_salarial2.dtypes)
+#print(df_reaj_salarial2)
+
+
+#df_avaliacao = pd.merge(df_aval2, df_prem_plano2, how='inner', left_on=['plano_beneficio'], right_on=['plano_beneficio'])
+df_avaliacao = pd.merge(df_aval2, df_prem_plano2, how='inner', on='plano_beneficio')
+df_avaliacao = pd.merge(df_avaliacao, df_prem_global2, how='inner', on='avaliacao')
+#print(df_avaliacao)
+
+
+
+#df_partic1 = pd.read_csv("input_csv/participante.csv", sep=";", decimal=",", encoding="utf-8")
+df_partic1 = pd.read_csv("input_csv/participante.csv", sep=";", decimal=",", encoding="latin1", parse_dates=['DT_NASCIMENTO', 'DT_OPCAO_BPD', 'DT_ADMISSAO', 'DT_ASSOCIACAO_FUNDACAO'], dtype= {'NR_MATRICULA': str}, low_memory=False)
+# parse_dates=['DT_NASCIMENTO']
+#print(df_partic1.dtypes)
+print(df_partic1.head(10))

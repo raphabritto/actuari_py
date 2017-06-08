@@ -1,3 +1,5 @@
 
 *.iml
 *.xml
+.idea/actuari_py.iml
+.idea/misc.xml
