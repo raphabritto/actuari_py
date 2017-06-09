@@ -33,7 +33,7 @@ df_reaj_salarial1 = pd.read_csv("input_csv/reajuste_salarial.csv", sep=";", deci
 #print(df_reaj_salarial1.dtypes)
 #print(df_reaj_salarial1)
 
-print("\n#########################################################################################\n")
+#print("\n#########################################################################################\n")
 
 import tools
 
@@ -130,28 +130,58 @@ df_reaj_salarial2.pc_reajuste = df_reaj_salarial2.pc_reajuste.map(tools.convertT
 #df_avaliacao = pd.merge(df_aval2, df_prem_plano2, how='inner', left_on=['plano_beneficio'], right_on=['plano_beneficio'])
 df_avaliacao = pd.merge(df_aval2, df_prem_plano2, how='inner', on='plano_beneficio')
 df_avaliacao = pd.merge(df_avaliacao, df_prem_global2, how='inner', on='avaliacao')
-#print(df_avaliacao)
 
-
-
-df_partic1 = pd.read_csv("input_csv/participante.csv", sep=";", decimal=",", encoding="latin1", parse_dates=['DT_NASCIMENTO', 'DT_OPCAO_BPD', 'DT_ADMISSAO', 'DT_ASSOCIACAO_FUNDACAO'], dtype= {'NR_MATRICULA': str, 'matricula_titular': str}, low_memory = False)
-nomes_colunas = {'ID_PARTICIPANTE': 'id_participante', 'NR_MATRICULA': 'matricula', 'DT_NASCIMENTO': 'data_nascimento', 'IR_SEXO': 'sexo_partic', 'ID_PATROCINADORA': 'patrocinadora',
+# participantes
+nomes_colunas = {'ID_PARTICIPANTE': 'id_participante', 'NR_MATRICULA': 'matricula', 'DT_NASCIMENTO': 'data_nascimento_partic', 'IR_SEXO': 'sexo_partic', 'ID_PATROCINADORA': 'patrocinadora',
                  'CD_ESTADO_CIVIL': 'estado_civil', 'DT_ADMISSAO': 'data_admissao', 'DT_ASSOCIACAO_FUNDACAO': 'data_associacao', 'PC_BENEFICIO_ESPECIAL': 'pbe', 'FL_DEFICIENTE': 'deficiente',
                  'NR_MATRICULA_TITULAR': 'matricula_titular', 'FL_MIGRADO': 'migrado'}
-df_partic2 = df_partic1.rename(columns= nomes_colunas).drop(['CD_SITUACAO_PATROC', 'DS_ESTADO_CIVIL', 'DT_OPCAO_BPD'], axis= 1)
-df_partic2.deficiente = df_partic2.deficiente.map(tools.convertToBoolean)
-df_partic2.migrado = df_partic2.migrado.map(tools.convertToBoolean)
-df_partic2.pbe = df_partic2.pbe.map(tools.convertToPercent)
-#print(df_partic2.head(10))
-#print(df_partic2.tail(10))
+df_partic1 = pd.read_csv("input_csv/participante.csv", sep=";", decimal=",", encoding="latin1", parse_dates=['DT_NASCIMENTO', 'DT_OPCAO_BPD', 'DT_ADMISSAO', 'DT_ASSOCIACAO_FUNDACAO'], dtype= {'NR_MATRICULA': str, 'matricula_titular': str}, low_memory = False).rename(columns= nomes_colunas).drop(['CD_SITUACAO_PATROC', 'DS_ESTADO_CIVIL', 'DT_OPCAO_BPD'], axis= 1)
+#df_partic2 = df_partic1.rename(columns= nomes_colunas).drop(['CD_SITUACAO_PATROC', 'DS_ESTADO_CIVIL', 'DT_OPCAO_BPD'], axis= 1)
+df_partic1.deficiente = df_partic1.deficiente.map(tools.convertToBoolean)
+df_partic1.migrado = df_partic1.migrado.map(tools.convertToBoolean)
+df_partic1.pbe = df_partic1.pbe.map(tools.convertToPercent)
 
 
-df_plano1 = pd.read_csv("input_csv/plano_beneficio.csv", sep=";", decimal=",", parse_dates=['DT_ADESAO'])
 nomes_colunas = {'ID_PARTICIPANTE': 'id_participante', 'DT_ADESAO': 'data_adesao', 'VL_SLD_SUBCONTA_PARTICIPANTE': 'saldo_conta_partic', 'VL_SLD_SUBCONTA_PATROCINADORA': 'saldo_conta_patroc',
                  'VL_RESERVA_BPD': 'reserva_bpd', 'VL_SALDO_PORTADO': 'saldo_portado', 'VL_BEN_SALDADO_INICIAL': 'beneficio_saldado', 'VL_SALARIO_PARTICIPACAO': 'salario_participacao',
                  'PC_CONTRIBUICAO_PARTICIPANTE': 'contribuicao_partic', 'PC_CONTRIBUICAO_PATROCINADORA': 'contribuicao_patroc'}
-df_plano2 = df_plano1.rename(columns= nomes_colunas)
-df_plano2.contribuicao_partic = df_plano2.contribuicao_partic.map(tools.convertToPercent)
-df_plano2.contribuicao_patroc = df_plano2.contribuicao_patroc.map(tools.convertToPercent)
-#print(df_plano2.dtypes)
-#print(df_plano2.head(10))
+df_plano1 = pd.read_csv("input_csv/plano_beneficio.csv", sep=";", decimal=",", parse_dates=['DT_ADESAO']).rename(columns= nomes_colunas)
+df_plano1.contribuicao_partic = df_plano1.contribuicao_partic.map(tools.convertToPercent)
+df_plano1.contribuicao_patroc = df_plano1.contribuicao_patroc.map(tools.convertToPercent)
+
+
+df_benef_inss1 = pd.read_csv("input_csv/beneficio_inss.csv", sep=";", decimal=",", parse_dates=['DT_INICIO_BENEFICIO'])
+#nomes_colunas = {'ID_PARTICIPANTE': 'id_participante', 'DT_INICIO_BENEFICIO': 'dib_inss', 'VL_VALOR': 'valor_beneficio_inss'}
+df_benef_inss2 = df_benef_inss1.rename(columns= nomes_colunas)
+
+
+nomes_colunas = {'ID_PARTICIPANTE': 'id_participante', 'IDBENEFICIO': 'beneficio', 'VL_VALOR': 'valor_beneficio_funcef', 'DT_INICIO_BENEFICIO': 'dib_funcef'}
+df_benef_func1 = pd.read_csv("input_csv/beneficio_funcef.csv", sep=";", decimal=",", encoding="latin1", parse_dates=['DT_INICIO_BENEFICIO']).rename(columns= nomes_colunas).drop(['NOME'], axis= 1)
+df_benef_func1['tipo_beneficio'] = df_benef_func1.beneficio.map(tools.convertToTipoBeneficio)
+df_benef_func2 = df_benef_func1[df_benef_func1.tipo_beneficio != 0].drop(['beneficio'], axis = 1)
+
+
+nomes_colunas = {'ID_PARTICIPANTE': 'id_participante', 'CD_GRAU_DEPENDENCIA': 'parentesco', 'DT_NASCIMENTO': 'data_nascimento', 'IR_SEXO': 'sexo', 'FL_INVALIDO': 'invalido'}
+df_depend1 = pd.read_csv("input_csv/dependente.csv", sep=";", decimal=",", encoding="latin1", parse_dates=['DT_NASCIMENTO']).rename(columns= nomes_colunas).drop(['FL_DESIGNADO_RESGATE', 'FL_DEPENDENTE_LEGAL'], axis=1)
+df_depend1.invalido = df_depend1.invalido.map(tools.convertToBoolean)
+
+df_depend_valido = df_depend1[(df_depend1.parentesco == 'COM') & (df_depend1.invalido == False)].rename(columns = {'sexo': 'sexo_valido'}).drop(['parentesco', 'invalido'], axis = 1)
+df_depend_valido['idade_valido'] = map(tools.calculateAge, df_depend_valido.data_nascimento, df_avaliacao.data_calculo)
+print(df_depend_valido)
+
+df_depend_invalido = df_depend1[df_depend1.invalido == True].rename(columns = {'sexo': 'sexo_invalido'}).drop(['parentesco', 'invalido'], axis = 1)
+#print(df_depend_invalido)
+
+df_depend_temporario = df_depend1[(df_depend1.parentesco == 'FIL') & (df_depend1.invalido == False)].rename(columns = {'sexo': 'sexo_temporario'}).drop(['parentesco', 'invalido'], axis = 1)
+#print(df_depend_temporario)
+
+
+#print(len(df_depend_valido))
+#print(len(df_depend_invalido))
+#print(len(df_depend_temporario))
+#print(len(df_depend1))
+
+
+
+
+
