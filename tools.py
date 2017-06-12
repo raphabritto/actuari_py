@@ -35,12 +35,8 @@ def convertToTipoBeneficio(x):
 
     return tipo
 
-import datetime
+from datetime import date
 
 def calculateAge(born, today):
-    print(born.dtypes)
-    born = datetime.strptime(born)
-    print(born.dtypes)
-    today = datetime(today)
-    #age = today
-    return 1+1
+    today = date.today()
+    return today.year - born.year - ((today.month, today.day) < (born.month, born.day))
