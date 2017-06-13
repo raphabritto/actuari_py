@@ -10,7 +10,7 @@ def convertToBoolean(x):
             return True
         else:
             return False
-    elif isinstance(x, int):
+    elif isinstance(x, (int, float)):
         if x == 1:
             return True
         else:
@@ -33,7 +33,7 @@ def convertToTipoBeneficio(x):
     elif x in pensao:
         tipo = 4
 
-    return tipo
+    return int(tipo)
 
 from datetime import date
 
