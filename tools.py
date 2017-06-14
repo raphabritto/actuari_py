@@ -1,3 +1,7 @@
+from datetime import date
+# import pandas as pd
+from pandas import isnull, NaT
+
 def convertToPercent(x):
     return (x / 100)
 
@@ -35,8 +39,23 @@ def convertToTipoBeneficio(x):
 
     return int(tipo)
 
-from datetime import date
-
 def calculateAge(born, today):
-    today = date.today()
-    return today.year - born.year - ((today.month, today.day) < (born.month, born.day))
+    try:
+        # if isinstance(born, date):
+        if not born.isnull():
+            if isinstance(born, date):
+                born = date.strftime()
+                return int(today.year - born.year - ((today.month, today.day) < (born.month, born.day)))
+            else:
+                return -2
+        else:
+            return 0
+    except AttributeError as e:
+        # print('Erro: ', e)
+        return -1
+
+def changeNullToZero(value):
+    if isnull(value):
+        return 0
+    else:
+        return value
