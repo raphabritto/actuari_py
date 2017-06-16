@@ -47,12 +47,12 @@ def calculateAge(born, today):
                 born = date.strftime()
                 return int(today.year - born.year - ((today.month, today.day) < (born.month, born.day)))
             else:
-                return -2
+                return -1
         else:
             return 0
     except AttributeError as e:
         # print('Erro: ', e)
-        return -1
+        return -2
 
 def changeNullToZero(value):
     if isnull(value):
