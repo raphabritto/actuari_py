@@ -43,16 +43,19 @@ from dateutil import parser
 
 def calculateAge(data_nascimento, data_calculo):
     dias_ano = 365.25
+    idade = 0
 
     try:
         # if isinstance(data_nascimento, date):
         if not isnull(data_nascimento):
             data_nascimento = date.strftime(data_nascimento, '%Y-%m-%d')
-            data_calculo = datetime.strftime(parser.parse(data_calculo), '%Y-%m-%d')
-            return int((data_calculo.year - data_nascimento.year) / dias_ano)
-            #return int(hoje.year - data_nascimento.year - ((hoje.month, hoje.day) < (data_nascimento.month, data_nascimento.day)))
-        else:
-            return 0
+            data_calculo = data_calculo.values
+                # datetime(data_calculo.values, '%Y-%m-%d')
+                # datetime.strftime(parser.parse(data_calculo), '%Y-%m-%d')
+            idade = data_calculo
+            # return int(hoje.year - data_nascimento.year - ((hoje.month, hoje.day) < (data_nascimento.month, data_nascimento.day)))
+
+        return idade
     except AttributeError as e:
         # print('Erro: ', e)
         return -1
