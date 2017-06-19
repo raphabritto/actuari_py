@@ -42,21 +42,17 @@ def convertToTipoBeneficio(x):
 from dateutil import parser
 
 def calculateAge(data_nascimento, data_calculo):
-    dias_ano = 365.25
+    # dias_ano = 365.25
     idade = 0
 
     try:
-        # if isinstance(data_nascimento, date):
         if not isnull(data_nascimento):
-            # data_nascimento = pd.to_datetime(data_nascimento[0])
             # data_calculo = date.strftime(data_calculo[0], '%Y-%m-%d')
                 # datetime(data_calculo.values, '%Y-%m-%d')
                 # datetime.strftime(parser.parse(data_calculo), '%Y-%m-%d')
-            # idade = data_nascimento.year
             idade = int(data_calculo.year - data_nascimento.year - ((data_calculo.month, data_calculo.day) < (data_nascimento.month, data_nascimento.day)))
     except AttributeError as e:
-        # print('Erro: ', e)
-        idade = e
+        idade = -1
 
     return idade
 
