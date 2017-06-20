@@ -62,3 +62,14 @@ def changeNullToZero(value):
         return 0
     else:
         return value
+
+
+def getTipoAssistido(matriculaTitular, assistido):
+    tipo = 0
+
+    if isnull(matriculaTitular) and assistido:
+        tipo = 1
+    elif not isnull(matriculaTitular) and assistido:
+        tipo = 2
+
+    return tipo
