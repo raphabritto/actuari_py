@@ -56,6 +56,16 @@ def calculateAge(data_nascimento, data_calculo):
 
     return idade
 
+def calculateAgeDif(sexo, idade, dif):
+    idadeCalculada = 0
+
+    if sexo == 'F':
+        idadeCalculada = idade + dif
+    else:
+        idadeCalculada = idade - dif
+
+    return idadeCalculada
+
 
 def changeNullToZero(value):
     if isnull(value):
@@ -64,12 +74,14 @@ def changeNullToZero(value):
         return value
 
 
-def getTipoAssistido(matriculaTitular, assistido):
+def getTipoAssistido(matriculaTitular):
     tipo = 0
 
-    if isnull(matriculaTitular) and assistido:
+    if isnull(matriculaTitular):
+        # aposentado
         tipo = 1
-    elif not isnull(matriculaTitular) and assistido:
+    else:
+        # pensionista
         tipo = 2
 
     return tipo
