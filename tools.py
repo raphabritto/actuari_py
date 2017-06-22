@@ -39,32 +39,37 @@ def convertToTipoBeneficio(x):
 
     return int(tipo)
 
-from dateutil import parser
 
 def calculateAge(data_nascimento, data_calculo):
-    # dias_ano = 365.25
     idade = 0
 
     try:
         if not isnull(data_nascimento):
-            # data_calculo = date.strftime(data_calculo[0], '%Y-%m-%d')
-                # datetime(data_calculo.values, '%Y-%m-%d')
-                # datetime.strftime(parser.parse(data_calculo), '%Y-%m-%d')
             idade = int(data_calculo.year - data_nascimento.year - ((data_calculo.month, data_calculo.day) < (data_nascimento.month, data_nascimento.day)))
     except AttributeError as e:
         idade = -1
 
     return idade
 
-def calculateAgeDif(sexo, idade, dif):
+def calculateAgeDif(sexoPartic, idadePartic, difIdade):
     idadeCalculada = 0
 
-    if sexo == 'F':
-        idadeCalculada = idade + dif
-    else:
-        idadeCalculada = idade - dif
+    if sexoPartic == 'M':
+        difIdade *= -1
+
+    idadeCalculada = idadePartic + (difIdade)
 
     return idadeCalculada
+
+
+def changeSexoDependenteNull(sexoPartic, sexoDepend):
+    if isnull(sexoDepend):
+        if sexoPartic == 'F':
+            sexoDepend = 'M'
+        else:
+            sexoDepend = 'F'
+
+    return sexoDepend
 
 
 def changeNullToZero(value):
