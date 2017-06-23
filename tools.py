@@ -1,5 +1,6 @@
-from datetime import date, datetime
 import pandas as pd
+import numpy as np
+from datetime import date, datetime
 from pandas import isnull
 
 def convertToPercent(x):
@@ -41,15 +42,15 @@ def convertToTipoBeneficio(x):
 
 
 def calculateAge(data_nascimento, data_calculo):
-    idade = 0
+    idade = np.nan
 
     try:
-        if not isnull(data_nascimento):
+        if pd.notnull(data_nascimento) and pd.notnull(data_calculo):
             idade = int(data_calculo.year - data_nascimento.year - ((data_calculo.month, data_calculo.day) < (data_nascimento.month, data_nascimento.day)))
     except AttributeError as e:
         idade = -1
 
-    return idade
+    return int(idade)
 
 def calculateAgeDif(sexoPartic, idadePartic, difIdade):
     idadeCalculada = 0
