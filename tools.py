@@ -42,7 +42,7 @@ def convertToTipoBeneficio(x):
 
 
 def calculateAge(data_nascimento, data_calculo):
-    idade = np.nan
+    idade = -1
 
     try:
         if pd.notnull(data_nascimento) and pd.notnull(data_calculo):
