@@ -92,17 +92,21 @@ def getTipoAssistido(matriculaTitular):
 
     return tipo
 
-def calculaIdade(row):
-    idade = 0
 
-    if row['tipo_assistido'] == 0:
-        if row['sexo_partic'] == 'F':
-        idade = row['idade']
-    elif row['tipo_assistido'] == 1:
-        sad
-    else:
-        asd
-
-    return idade
+# def calculaIdade(row):
+#     idade = 0
+#
+#     if row['tipo_assistido'] == 0:
+#         if row['sexo_partic'] == 'F':
+#             idade = row['idade_partic'] + row['diferenca_idade']
+#         else:
+#             idade = row['idade_partic'] - row['diferenca_idade']
+#
+#     elif row['tipo_assistido'] == 1:
+#         sad
+#     else:
+#         asd
+#
+#     return idade
 
 
