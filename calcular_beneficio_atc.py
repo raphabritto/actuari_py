@@ -1,5 +1,6 @@
 
 import pandas as pd
+import numpay as np
 
 CtFamPens = 0.8
 NroBenAno = 13
