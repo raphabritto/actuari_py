@@ -81,12 +81,6 @@ ativo['VlSdoConPatrEvol'] = [float(x.replace(".","").replace(",", ".")) for x in
 
 ativo['VlBenSaldado'] = [float(x.replace(".","").replace(",", ".")) for x in ativo['VlBenSaldado']]
 
-ativo.dtypes
-
-ativo.describe()
-
-ativo.head()
-
 ativo['beneficio_total_atc'] = ativo.apply(calcular_beneficio_total_atc, axis = 1)
 
 ativo['contribuicao_beneficio_atc'] = [calcular_contribuicao(value, teto_contribuicao_inss, faixa_1, faixa_2, faixa_3) for value in ativo['beneficio_total_atc']]
