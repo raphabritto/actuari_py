@@ -94,7 +94,25 @@ def getTipoAssistido(matriculaTitular):
 
 
 import csv
+from models import Ativo
 
-def getAtivo():
-    file_name =
-    csv_file = open()
+def getAtivoAll():
+    file_name = 'data/participantes_cadastro_27597.csv'
+    ativos = []
+
+    with open(file_name, 'r') as csv_file:
+        reader = csv.reader(csv_file, delimiter=';')
+        next(reader)
+
+        for row in reader:
+            ativo = Ativo(row[0], row[7], row[2], row[9], row[15], row[14])
+            ativos.append(ativo)
+
+    return ativos
+
+
+ativos = getAtivoAll()
+
+for ativo in ativos[:10]:
+    print(ativo, ativo.dataNascimento, ativo.idade)
+

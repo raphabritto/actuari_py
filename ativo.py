@@ -1,4 +1,4 @@
-from participante import Participante
+from models import Participante
 
 class Ativo(Participante):
     def __init__(self, nome, data_nascimento):
