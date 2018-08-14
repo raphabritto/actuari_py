@@ -2,7 +2,9 @@
 *.iml
 *.xml
 .idea/
-# .idea/actuari_py.iml
-# .idea/misc.xml
+.idea/actuari_py.iml
+.idea/misc.xml
+.idea/workspace.xml
 *.csv
 data/
+
