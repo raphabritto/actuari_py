@@ -1,6 +1,8 @@
 
 *.iml
 *.xml
-.idea/actuari_py.iml
-.idea/misc.xml
+.idea/
+# .idea/actuari_py.iml
+# .idea/misc.xml
 *.csv
+data/
