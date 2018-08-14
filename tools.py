@@ -1,7 +1,38 @@
+import csv
+
 import pandas as pd
-import numpy as np
-from datetime import date, datetime
 from pandas import isnull
+
+from models import Ativo
+
+# ////////////////////////
+
+def getAtivoAll():
+    file_name = 'data/participantes_cadastro_27597.csv'
+    ativos = []
+
+    # try:
+    with open(file_name, 'r', encoding='ISO-8859-1') as csv_file:
+        reader = csv.reader(csv_file, delimiter=';')
+        next(reader)
+
+        for row in reader:
+            ativo = Ativo(row[0], row[7], row[2], row[9], row[15], row[14])
+            ativos.append(ativo)
+
+        return ativos
+    # except:
+    #     print("Erro desconhecido.")
+
+
+ativos = getAtivoAll()
+
+for ativo in ativos[:10]:
+    print(ativo, ativo.dataNascimento, ativo.idade)
+
+
+# ////////////////////////
+
 
 def convertToPercent(x):
     return (x / 100)
@@ -93,26 +124,5 @@ def getTipoAssistido(matriculaTitular):
     return tipo
 
 
-import csv
-from models import Ativo
 
-def getAtivoAll():
-    file_name = 'data/participantes_cadastro_27597.csv'
-    ativos = []
-
-    with open(file_name, 'r') as csv_file:
-        reader = csv.reader(csv_file, delimiter=';')
-        next(reader)
-
-        for row in reader:
-            ativo = Ativo(row[0], row[7], row[2], row[9], row[15], row[14])
-            ativos.append(ativo)
-
-    return ativos
-
-
-ativos = getAtivoAll()
-
-for ativo in ativos[:10]:
-    print(ativo, ativo.dataNascimento, ativo.idade)
 
