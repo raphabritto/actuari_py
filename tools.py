@@ -17,12 +17,12 @@ def getAtivoAll():
         next(reader)
 
         for row in reader:
-            ativo = Ativo(row[0], row[7], row[2], row[9], row[15], row[14])
+            ativo = Ativo(row[0], row[8], row[7], row[2], row[9], row[11], row[12], row[15], row[13], row[14])
             ativos.append(ativo)
 
         return ativos
     # except:
-    #     print("Erro desconhecido.")
+    #     print("Erro desconhecido ao ler arquivo csv.")
 
 
 ativos = getAtivoAll()

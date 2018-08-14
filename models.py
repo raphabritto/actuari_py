@@ -9,7 +9,7 @@ from datetime import datetime, date
 
 
 class Pessoa(object):
-    def __init__(self, id, nome, sexo, data_nascimento, data_morte, invalido):
+    def __init__(self, id, nome, sexo, data_nascimento, data_morte, invalido = False):
         self.id = id
         self.nome = nome
         self.sexo = sexo
@@ -24,7 +24,7 @@ class Pessoa(object):
 
     @sexo.setter
     def sexo(self, value):
-        if (value in [1,2]):
+        if value in [1,2]:
             self._sexo = value
         else:
             self._sexo = None
@@ -51,7 +51,7 @@ class Pessoa(object):
 
     @invalido.setter
     def invalido(self, value):
-        if (value in (0,1)):
+        if value in (0, 1, False, True):
             self._invalido = bool(value)
         else:
             self._invalido = False
@@ -66,7 +66,7 @@ class Pessoa(object):
             if all([value is not None, len(value) == 10]):
                 self._dataMorte = datetime.strptime(value, '%d/%m/%Y').date()
         except ValueError:
-            print('Erro formato data morte.')
+            print('Erro no valor da data morte.')
         except:
             print("Erro inesperado na data morte.")
 
@@ -81,17 +81,29 @@ class Pessoa(object):
 
 
 class Participante(Pessoa):
-    def __init__(self, id, nome, sexo, data_nascimento, data_morte, invalido):
+    def __init__(self, id, matricula, nome, sexo, data_nascimento, data_morte, invalido):
         super().__init__(id, nome, sexo, data_nascimento, data_morte, invalido)
         self.estadoCivil = 0
-        self.patrocinadora = None
+        self.matricula = matricula
         self.migrado = False
         self.plano = None
+        self.patrocinadora = None
         self.situacaoPlano = None
         self.situacaoFundacao = None
         # self.conjuge = self.addConjuge(self.sexo, self.dataNascimento)
         self.sexoConjuge = 1
         self.idadeConjuge = 21
+
+    @property
+    def matricula(self):
+        return self._matricula
+
+    @matricula.setter
+    def matricula(self, value):
+        try:
+            self._matricula = value
+        except:
+            print("Erro matricula.")
 
     # @property
     # def conjuge(self):
@@ -108,20 +120,90 @@ class Participante(Pessoa):
 
 
 class Ativo(Participante):
-    def __init__(self, id, nome, sexo, data_nascimento, data_morte, invalido):
-        super().__init__(id, nome, sexo, data_nascimento, data_morte, invalido)
-        self.dataAdmissao = None
-        self.dataAssociacao = None
-        self.percentualBeneficioEspecial = 0
+    def __init__(self, id, matricula, nome, sexo, data_nascimento, data_admissao, data_associacao, data_morte, pbe = 0.00, invalido = False):
+        super().__init__(id, matricula, nome, sexo, data_nascimento, data_morte, invalido)
+        # self.dataAdmissao = None
+        # self.dataAssociacao = None
+        self.beneficioSaldado = 0
+        self.dataAdmissao = data_admissao
+        self.dataAssociacao = data_associacao
+        self.dataInicioContribuicaoINSS = None
+        self.idadeAposentadoriaFundacao = 0
+        self.idadeAposentadoriaINSS = 0
+        self.idadeAdmissao = 0
+        self.idadeAssociacao = 0
+        self.percentualBeneficioEspecial = pbe
+        self.percentualContribuicaoParticipante = 0
+        self.percentualContribuicaoPatrocinadora = 0
+        self.saldoContaParticipante = 0
+        self.saldoContaPatrocinadora = 0
         self.tempoServicoAnos = 0
         self.tempoServicoMeses = 0
         self.tempoServicoDias = 0
 
+    @property
+    def dataAdmissao(self):
+        return self._dataAdmissao
+
+    @dataAdmissao.setter
+    def dataAdmissao(self, value):
+        try:
+            if all([value is not None, len(value) == 10]):
+                self._dataAdmissao = datetime.strptime(value, '%d/%m/%Y').date()
+            else:
+                self._dataAdmissao = None
+        except:
+            print("Erro data admissão.")
+
+    @property
+    def dataAssociacao(self):
+        return self._dataAssociacao
+
+    @dataAssociacao.setter
+    def dataAssociacao(self, value):
+        try:
+            if all([value is not None, len(value) == 10]):
+                self._dataAssociacao = datetime.strptime(value, '%d/%m/%Y').date()
+            else:
+                self._dataAssociacao = None
+        except:
+            print("Erro data associação.")
+
+    @property
+    def percentualBeneficioEspecial(self):
+        return self._percentualBeneficioEspecial
+
+    @percentualBeneficioEspecial.setter
+    def percentualBeneficioEspecial(self, value):
+        if isinstance(value, str):
+            self._percentualBeneficioEspecial = float(value.replace(',', '.'))
+        elif isinstance(value, int):
+            self._percentualBeneficioEspecial = float(value)
+        elif isinstance(value, float):
+            self._percentualBeneficioEspecial = value
+        else:
+            self._percentualBeneficioEspecial = 0.00
+
+        # if value >= 0.00:
+        #     self._percentualBeneficioEspecial = value
+        # else:
+        #     self._percentualBeneficioEspecial = float(0.00)
+
 
 class Assistido(Participante):
-    def __init__(self, arg):
+    def __init__(self, matricula_titular):
         pass
         self.dependente = None
+        self.matriculaTitular = matricula_titular
 
+    @property
+    def matriculaTitular(self):
+        return self._matriculaTitular
 
+    @matriculaTitular.setter
+    def matriculaTitular(self, value):
+        try:
+            self._matriculaTitular = value
+        except:
+            print("Erro matricula titular.")
 
