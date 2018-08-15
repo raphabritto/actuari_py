@@ -184,11 +184,6 @@ class Ativo(Participante):
         else:
             self._percentualBeneficioEspecial = 0.00
 
-        # if value >= 0.00:
-        #     self._percentualBeneficioEspecial = value
-        # else:
-        #     self._percentualBeneficioEspecial = float(0.00)
-
 
 class Assistido(Participante):
     def __init__(self, matricula_titular):
@@ -207,3 +202,54 @@ class Assistido(Participante):
         except:
             print("Erro matricula titular.")
 
+
+class Avaliacao(object):
+
+    def __init__(self, id, data_calculo, maioridade, cota_familiar):
+        self.id = id
+        self.dataCalculo = data_calculo
+        self.maioridade = maioridade
+        self.cotaFamiliar = cota_familiar
+        self.despesaAdministrativaParticipante = None
+        self.despesaAdministrativaPatrocinadora = None
+        self.faixaContribuicao1 = None
+        self.faixaContribuicao2 = None
+        self.faixaContribuicao3 = None
+        self.reajusteSalario = None
+        self.reajusteBeneficioFundacao = None
+        self.reajusteBeneficioINSS = None
+        self.metaCusteio = None
+        self.metaCusteioAdministrativo = None
+        self.opcaoBUA = None
+        self.saqueBUA = None
+        self.peculioMorteAtivo = None
+        self.peculioMorteAssistido = None
+        self.saidaBPD = None
+        self.saidaPortabilidade = None
+        self.saidaResgate = None
+        self.taxaAdministracaoBeneficio = None
+        self.taxaCrescimentoBeneficio = None
+        self.taxaCrescimentoSalarial = None
+        self.beneficioMinimo = None # piso beneficio, menor valor para beneficio
+        self.lx = None
+        self.peculioMinimoMorte = None # piso peculio morte, menor valor para peculio por morte
+        self.salarioCaixa = None # teto salario caixa
+        self.salarioMinimo = None
+        self.tetoBeneficioINSS = None
+        self.tetoContribuicaoINSS = None
+        self.planoBeneficio = None # id plano beneficio
+
+
+    @property
+    def dataCalculo(self):
+        return self._dataCalculo
+
+    @dataCalculo.setter
+    def dataCalculo(self, value):
+        try:
+            if all([value is not None, len(value) == 10]):
+                self._dataCalculo = datetime.strptime(value, '%d/%m/%Y').date()
+            else:
+                self._dataCalculo = None
+        except:
+            print("Erro data calculo avaliacao.")
