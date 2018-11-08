@@ -56,15 +56,6 @@
 			call symputx('percentualSRB', NR_MULT_SAL_PARTIC_BENEF_RISCO);
 		RUN;
 
-/*		data _null_;*/
-/*			if (&CdPlanBen = 4) then do;*/
-/*				call symputx('percentualSRB', 0.10);*/
-/*			end;*/
-/*			else if (&CdPlanBen = 5) then do;*/
-/*				call symputx('percentualSRB', 0.20);*/
-/*			end;*/
-/*		run;*/
-
 		%_eg_conditional_dropds(work.parametro);
 		PROC SQL;
 		   CREATE TABLE work.PARAMETRO AS
@@ -86,13 +77,8 @@
 		%_eg_conditional_dropds(work.reajuste_salarial);
 		PROC SQL;
 		   CREATE TABLE work.REAJUSTE_SALARIAL AS
-		   SELECT /*t1.ID_AVAL_PLANO_REAJ_SAL, */
-/*		          t1.ID_AVALIACAO, */
-		          t1.ID_TIPO_REAJUSTE,
+		   SELECT t1.ID_TIPO_REAJUSTE,
 		          t1.ID_PATROCINADORA,
-/*		          t1.CD_INDEXADOR, */
-/*		          (DATEPART(t1.DT_INICIAL)) FORMAT=DDMMYY10. AS DT_INICIAL, */
-/*		          (DATEPART(t1.DT_FINAL)) FORMAT=DDMMYY10. AS DT_FINAL, */
 		          ((t1.PC_REAJUSTE / 100) + 1) AS PC_REAJUSTE,
 				  t2.DS_TIPO_REAJUSTE
 		      FROM sgca.TB_ATU_REAJUSTE_SALARIAL t1
@@ -104,12 +90,7 @@
 		%_eg_conditional_dropds(work.INDEXADOR_MONETARIO);
 		PROC SQL;
 		   CREATE TABLE work.INDEXADOR_MONETARIO AS
-		   SELECT /*t1.ID_AVAL_PLANO_IDX_MON, */
-		          t1.ID_REFERENCIA_INDEXADOR,
-/*		          t1.ID_AVALIACAO, */
-/*		          t1.CD_INDEXADOR, */
-/*		            (DATEPART(t1.DT_INICIAL)) FORMAT=DDMMYY10. AS DT_INICIAL, */
-/*		            (DATEPART(t1.DT_FINAL)) FORMAT=DDMMYY10. AS DT_FINAL, */
+		   SELECT t1.ID_REFERENCIA_INDEXADOR,
 		          t1.PC_REAJUSTE,
 				  t2.DS_REFERENCIA_INDEXADOR
 		      FROM sgca.TB_ATU_INDEXADOR_MONETARIO t1
@@ -125,7 +106,7 @@
 		          t1.MOECODIGO,
 				  (DATEPART(t1.COTDATA)) FORMAT=DDMMYY10. AS COTDATA,
 		            ((t1.COTVALOR / 100) + 1) AS COTVALOR
-		      FROM planus.COTACAOMOEDA t1
+		      FROM sgca.tb_atu_cotacao_moeda t1
 		      WHERE t1.MOECODIGO = 7
 		      ORDER BY t1.COTDATA;
 		RUN;

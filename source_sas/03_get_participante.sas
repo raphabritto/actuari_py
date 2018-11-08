@@ -4,26 +4,51 @@ PROC SQL;
    	CREATE TABLE WORK.PARTICIPANTE AS
    	SELECT t1.ID_PARTICIPANTE,
           t1.ID_CADASTRO AS CdSitCadPart,
+/*          t1.NM_PARTICIPANTE AS NoNomePartic, */
           t1.NR_MATRICULA AS NuMatrPartic,
           (DATEPART(t1.DT_NASCIMENTO)) FORMAT=DDMMYY10. AS DtNascPartic,
 	      t1.ID_SEXO AS CdSexoPartic,
           t1.ID_PATROCINADORA AS CdPatrocPlan,
           t1.ID_SITUACAO_PATROCINADORA,
+/*	  	(CASE*/
+/*			WHEN t1.CD_ESTADO_CIVIL = 'C' THEN 1*/
+/*			WHEN t1.CD_ESTADO_CIVIL = 'D' THEN 2*/
+/*			WHEN t1.CD_ESTADO_CIVIL = 'J' THEN 3*/
+/*			WHEN t1.CD_ESTADO_CIVIL = 'S' THEN 4*/
+/*			ELSE 5*/
+/*		END) AS CdEstCivPart,*/
 	  	t1.ID_ESTADO_CIVIL AS CdEstCivPart,
+/*		t2.DS_ESTADO_CIVIL as EstCivPart,*/
+/*            (CASE  */
+/*               WHEN t1.FL_DIRETOR = 'N'*/
+/*               THEN 0*/
+/*               ELSE 1*/
+/*            END) AS CdExDirPatro, */
             (DATEPART(t1.DT_OPCAO_BPD)) FORMAT=DDMMYY10. AS DT_OPCAO_BPD,
             (DATEPART(t1.DT_ADMISSAO)) FORMAT=DDMMYY10. AS DtAdmPatroci,
             (DATEPART(t1.DT_ASSOCIACAO_FUNDACAO)) FORMAT=DDMMYY10. AS DtAssEntPrev,
           (t1.PC_BENEFICIO_ESPECIAL / 100) AS PeFatReduPbe,
+/*        (CASE*/
+/*           WHEN t1.FL_APOSENTADORIA_ESPECIAL = 'N'*/
+/*           THEN 0*/
+/*           ELSE 1*/
+/*        END) AS CdElegApoEsp, */
           t1.ID_ENTIDADE_ORIGEM AS CdParEntPrev,
+/*        (CASE  */
+/*           WHEN t1.FL_DEFICIENTE = 'N'*/
+/*           THEN 0*/
+/*           ELSE 1*/
+/*        END) AS FL_DEFICIENTE,*/
 		  t1.FL_DEFICIENTE,
+/*            (DATEPART(t1.DT_MORTE)) FORMAT=DDMMYY10. AS DT_MORTE, */
           t1.NR_MATRICULA_TITULAR AS NuMatrOrigem,
 		  (CASE
-		  	WHEN t1.NR_MATRICULA_TITULAR IS NULL THEN 0
-			ELSE 1
-		   END) AS FlgPensionista,
+			  	WHEN t1.NR_MATRICULA_TITULAR IS NULL THEN 0
+				ELSE 1
+			END) AS FlgPensionista,
 			t1.fl_migrado
   FROM sgca.TB_ATU_PARTICIPANTE t1
-  WHERE t1.ID_CADASTRO = &id_cadastro.
+  WHERE t1.ID_CADASTRO = &id_cadastro
   ORDER BY t1.ID_PARTICIPANTE;
 RUN;
 
@@ -68,15 +93,12 @@ PROC SQL;
    SELECT t1.ID_PARTICIPANTE,
 		  t1.VL_VALOR format=commax14.2,
           (DATEPART(t1.DT_INICIO_BENEFICIO)) FORMAT=DDMMYY10. AS DT_INICIO_BENEFICIO,
-		  B.ID_TIPO_BENEFICIO,
-		  tb.NM_TIPO_BENEFICIO,
-		  o.nm_origem_beneficio
+/*			*WHEN t1.IDBENEFICIO = 522 THEN 4**/
+		  B.ID_TIPO_BENEFICIO
       FROM sgca.TB_ATU_PARTIC_BEN_FUNCEF t1
       INNER JOIN WORK.PARTICIPANTE t2 ON (t1.ID_PARTICIPANTE = t2.ID_PARTICIPANTE)
 	  INNER JOIN sgca.TB_ATU_BENEFICIO B ON (t1.ID_BENEFICIO = B.ID_BENEFICIO)
-	  LEFT JOIN sgca.tb_atu_origem_beneficio o on (t1.id_origem_beneficio = o.id_origem_beneficio)
-	  INNER JOIN sgca.tb_atu_tipo_beneficio tb on (b.ID_TIPO_BENEFICIO = tb.ID_TIPO_BENEFICIO)
-	 WHERE t1.ID_PLANO = &IDPLANOPREV.
+	 WHERE t1.ID_PLANO = &IDPLANOPREV
 	 AND B.ID_ENTIDADE = 1
       ORDER BY t1.ID_PARTICIPANTE;
 RUN;
@@ -86,9 +108,7 @@ PROC SQL;
    CREATE TABLE work.tipo_beneficio_dib_funcef AS
 	SELECT distinct(t1.ID_PARTICIPANTE),
 		   t1.ID_TIPO_BENEFICIO as CdTipoBenefi,
-		   t1.DT_INICIO_BENEFICIO as DtIniBenPrev,
-		   t1.NM_TIPO_BENEFICIO,
-		   t1.nm_origem_beneficio
+		   t1.DT_INICIO_BENEFICIO as DtIniBenPrev
 	FROM work.beneficio_funcef_all t1
 	WHERE t1.ID_TIPO_BENEFICIO <> 0
 	ORDER BY t1.ID_PARTICIPANTE;
@@ -104,8 +124,7 @@ PROC SQL;
    ORDER BY t1.ID_PARTICIPANTE;
 RUN;
 
-%_eg_conditional_dropds(partic.beneficio_funcef);
-data partic.beneficio_funcef;
+data work.beneficio_funcef;
 	merge work.beneficio_funcef work.tipo_beneficio_dib_funcef;
 	by id_participante;
 run;
@@ -200,7 +219,7 @@ RUN;
 PROC DELETE DATA = WORK.DEPENDENTE;
 
 data work.participante;
-	MERGE WORK.PARTICIPANTE WORK.PLANO_BENEFICIO WORK.BENEFICIO_INSS PARTIC.BENEFICIO_FUNCEF WORK.CONJUGE WORK.FILHO_JOVEM WORK.FILHO_INVALIDO;
+	MERGE WORK.PARTICIPANTE WORK.PLANO_BENEFICIO WORK.BENEFICIO_INSS WORK.BENEFICIO_FUNCEF WORK.CONJUGE WORK.FILHO_JOVEM WORK.FILHO_INVALIDO;
 	BY ID_PARTICIPANTE;
 
 	if (VlBenefiInss = .) then
@@ -254,4 +273,4 @@ PROC SQL NOPRINT;
 	FROM work.ASSISTIDOS;
 RUN;
 
-*PROC DELETE DATA = WORK.PLANO_BENEFICIO WORK.BENEFICIO_INSS WORK.BENEFICIO_FUNCEF WORK.RUBRICA_JUDICIAL WORK.CONJUGE WORK.FILHO_JOVEM WORK.FILHO_INVALIDO WORK.PARTICIPANTE;
+PROC DELETE DATA = WORK.PLANO_BENEFICIO WORK.BENEFICIO_INSS WORK.BENEFICIO_FUNCEF WORK.RUBRICA_JUDICIAL WORK.CONJUGE WORK.FILHO_JOVEM WORK.FILHO_INVALIDO WORK.PARTICIPANTE;
