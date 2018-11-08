@@ -3,8 +3,8 @@ options dlcreatedir;
 
 * --- variaveis de configuração do sistema que devem ser alteradas manuamente --- *;
 *%let root_dir = \\shaula\caprev_sas\Fluxo_Atuarial_Estocastico;
-%let root_dir = \\shaula\caprev_sas2\homologacao;
-*%let root_dir = \\shaula\caprev_sas2\Sistema_Atuarial;
+*%let root_dir = \\shaula\caprev_sas2\homologacao;
+%let root_dir = \\shaula\caprev_sas2\Sistema_Atuarial;
 
 %let MaxAgeCoberturaAtivos = 125;
 %let MaxAgeCoberturaAssistidos = 125;

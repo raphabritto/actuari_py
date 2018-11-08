@@ -253,3 +253,5 @@ class Avaliacao(object):
                 self._dataCalculo = None
         except:
             print("Erro data calculo avaliacao.")
+
+
